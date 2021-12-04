@@ -2,6 +2,11 @@
 import Vue from 'vue'
 import { API_PARAMS } from '~/api'
 import MovieDescribeListItem from '~/components/MovieDescribeListItem.vue'
+
+interface AsyncData {
+  movie: any
+}
+
 export default Vue.extend({
   components: { MovieDescribeListItem },
 
@@ -17,6 +22,8 @@ export default Vue.extend({
 
     return await { movie: response.data }
   },
+
+  data: (): AsyncData => ({ movie: null }),
 
   head () {
     return { title: this.movie?.title }
@@ -35,7 +42,7 @@ export default Vue.extend({
 
     genres () {
       if (this.movie) {
-        return this.movie.genres.map(el => el.name).join(', ')
+        return this.movie.genres.map((el: {name: string}) => el.name).join(', ')
       }
 
       return ''
@@ -43,7 +50,7 @@ export default Vue.extend({
 
     date () {
       if (this.movie) {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' }
+        const options = { day: 'numeric', month: 'long', year: 'numeric' } as const
         return new Date(this.movie.release_date).toLocaleString('ru-RU', options)
       }
 
